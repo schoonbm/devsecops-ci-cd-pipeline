@@ -35,8 +35,8 @@ pipeline {
             }
         }
         stage('Docker Build') {
-            dir('secureapp') {
-                steps {
+            steps {
+                dir('secureapp') {
                     sh 'docker build -t secureapp:latest .'
                 }
             }
