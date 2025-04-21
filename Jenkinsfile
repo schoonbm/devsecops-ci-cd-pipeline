@@ -35,8 +35,10 @@ pipeline {
             }
         }
         stage('Docker Build') {
-            steps {
-                sh 'docker build -t secureapp:latest .'
+            dir('secureapp') {
+                steps {
+                    sh 'docker build -t secureapp:latest .'
+                }
             }
         }
         stage('Trivy Image Scan') {
