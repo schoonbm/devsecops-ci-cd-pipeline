@@ -9,6 +9,11 @@ pipeline {
         MAVEN_OPTS = "-Dmaven.repo.local=.m2"
     }
     stages {
+        stage('Clean workspace') {
+            steps {
+                deleteDir()
+            }
+        }
         stage('Build') {
             steps {
                 sh 'mvn clean package'
