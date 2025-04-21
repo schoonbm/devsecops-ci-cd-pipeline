@@ -20,6 +20,7 @@ pipeline {
                     credentialsId: 'github-creds',
                     url: 'https://github.com/schoonbm/DevSecOps-CI-CD-Pipeline.git'
             }
+        }
         stage('Build') {
             steps {
                 sh 'mvn clean package'
