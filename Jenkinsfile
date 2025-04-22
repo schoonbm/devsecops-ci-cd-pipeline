@@ -2,7 +2,11 @@ pipeline {
     agent {
         docker {
             image 'jenkins-agent-secure:latest'
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // for Docker inside Docker
+            args '''
+                -v /var/run/docker.sock:/var/run/docker.sock'
+                -v C:/Users/mirel/.kube:/root/.kube
+                -e KUBECONFIG=/root/.kube/config
+            '''
         }
     }
     environment {
