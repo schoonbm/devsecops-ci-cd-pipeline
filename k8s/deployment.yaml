@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secureapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secureapp
+  template:
+    metadata:
+      labels:
+        app: secureapp
+    spec:
+      containers:
+        - name: secureapp
+          image: mschoonbeck/secureapp:latest
+          ports:
+            - containerPort: 8080
