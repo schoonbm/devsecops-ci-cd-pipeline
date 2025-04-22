@@ -59,7 +59,16 @@ pipeline {
             steps {
                 dir('secureapp') {
                     sh 'mvn test'
+                    junit 'target/surefire-reports/*.xml'
                 }
+            }
+        }
+        stage('Deploy to Minikube') {
+            steps {
+                sh '''
+                    kubectl apply -f k8s/deployment.yaml
+                    kubectl apply -f k8s/service.yaml
+                '''
             }
         }
     }
