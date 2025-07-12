@@ -18,7 +18,7 @@ pipeline {
             steps {
                 git branch: 'main',
                     credentialsId: 'github-creds',
-                    url: 'https://github.com/schoonbm/DevSecOps-CI-CD-Pipeline.git'
+                    url: 'https://github.com/schoonbm/devsecops-ci-cd-pipeline.git'
             }
         }
         stage('Build') {
