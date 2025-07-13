@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=.m2"
-        KUBECONFIG = '/home/mirela/.kube/config'
+        KUBECONFIG = '/root/.kube/config'
     }
     stages {
         stage('Clean workspace') {
