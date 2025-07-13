@@ -68,8 +68,13 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 dir('k8s') {
-                    sh 'kubectl apply -f deployment.yaml --record'
-                    sh 'kubectl apply -f service.yaml'
+                    sh '''
+                        echo "KUBECONFIG=$KUBECONFIG"
+                        kubectl config get-contexts
+                        kubectl config current-context
+                        kubectl apply -f deployment.yaml --record
+                        kubectl apply -f service.yaml   
+                    '''
                 }
             }
         }
