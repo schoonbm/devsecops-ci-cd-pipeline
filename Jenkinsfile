@@ -66,7 +66,7 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 dir('k8s') {
-                    sh 'kubectl apply -f deployment.yaml'
+                    sh 'kubectl apply -f deployment.yaml --record'
                     sh 'kubectl apply -f service.yaml'
                 }
             }
