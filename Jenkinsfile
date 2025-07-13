@@ -15,12 +15,6 @@ pipeline {
                 deleteDir()
             }
         }
-        /*stage('Checkout') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/schoonbm/devsecops-ci-cd-pipeline.git'
-            }
-        }*/
         stage('Build') {
             steps {
                 dir('secureapp') {
