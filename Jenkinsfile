@@ -17,7 +17,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    credentialsId: 'github-token',
                     url: 'https://github.com/schoonbm/devsecops-ci-cd-pipeline.git',
                     gitTool: 'git-2.39.5'
             }
