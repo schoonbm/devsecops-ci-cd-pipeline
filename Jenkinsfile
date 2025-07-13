@@ -2,11 +2,12 @@ pipeline {
     agent {
         docker {
             image 'jenkins-agent-secure:latest'
-            args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+            args '-v /var/run/docker.sock:/var/run/docker.sock -v /home/mirela/.kube:/root/.kube -v /home/mirela/.minikube:/root/.minikube -e KUBECONFIG=/root/.kube/config'
         }
     }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=.m2"
+        KUBECONFIG = '/home/mirela/.kube/config'
     }
     stages {
         stage('Clean workspace') {
