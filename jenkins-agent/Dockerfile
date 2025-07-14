@@ -1,11 +1,18 @@
 FROM eclipse-temurin:21-jdk
 
 LABEL maintainer="Mirela"
-LABEL description="Jenkins agent with Java 21, Maven, Trivy, Docker CLI"
+LABEL description="Jenkins agent with Java 21, Maven, Trivy, Docker CLI, kubectl"
 
-# Install basic tools
+# Install system dependencies
 RUN apt-get update && \
-    apt-get install -y curl git docker.io unzip && \
+    apt-get install -y \
+        curl \
+        git \
+        docker.io \
+        unzip \
+        lsb-release \
+        ca-certificates \
+        gnupg && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Maven
@@ -23,5 +30,8 @@ RUN curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubec
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
 
-# Create working dir
+# Create workspace
 WORKDIR /workspace
+
+RUN groupadd -g 999 docker || true && \
+    usermod -aG docker root
