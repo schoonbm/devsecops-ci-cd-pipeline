@@ -35,3 +35,9 @@ WORKDIR /workspace
 
 RUN groupadd -g 999 docker || true && \
     usermod -aG docker root
+
+# Install Sonar Scanner
+RUN curl -sSLo /tmp/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip \
+    && unzip /tmp/sonar-scanner.zip -d /opt \
+    && ln -s /opt/sonar-scanner-*/bin/sonar-scanner /usr/bin/sonar-scanner \
+    && rm /tmp/sonar-scanner.zip
