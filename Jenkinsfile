@@ -3,16 +3,16 @@ pipeline {
         docker {
             image 'jenkins-agent-secure:latest'
             args '''
-            -v /home/mirela/.kube:/kube
-            -v /home/mirela/.minikube:/root/.minikube
-            -v /var/run/docker.sock:/var/run/docker.sock
-            -e KUBECONFIG=/kube/config
+                -v /var/run/docker.sock:/var/run/docker.sock
+                -v /home/mirela/.kube:/root/.kube
+                -v /home/mirela/.minikube:/root/.minikube
+                -e KUBECONFIG=/root/.kube/config
             '''
         }
     }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=.m2"
-        KUBECONFIG = '/kube/config'
+        KUBECONFIG = '/root/.kube/config'
     }
     stages {
         stage('Clean workspace') {
@@ -74,9 +74,6 @@ pipeline {
             steps {
                 dir('k8s') {
                     sh '''
-                        echo "KUBECONFIG=$KUBECONFIG"
-                        kubectl config get-contexts
-                        kubectl config current-context
                         kubectl apply -f deployment.yaml --record
                         kubectl apply -f service.yaml   
                     '''
