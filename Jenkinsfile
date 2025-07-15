@@ -73,5 +73,24 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube Scan') {
+        environment {
+            SONAR_HOST_URL = 'http://host.docker.internal:9000'
+            SONAR_LOGIN = credentials('sonarqube-token')
+        }
+        steps {
+            dir('secureapp') {
+                sh '''
+                    sonar-scanner \
+                    -Dsonar.projectKey=secureapp \
+                    -Dsonar.sources=src \
+                    -Dsonar.java.binaries=target \
+                    -Dsonar.host.url=$SONAR_HOST_URL \
+                    -Dsonar.login=$SONAR_LOGIN
+                '''
+            }
+        }
+    }
+
     }
 }
