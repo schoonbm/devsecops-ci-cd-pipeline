@@ -3,16 +3,17 @@ pipeline {
         docker {
             image 'jenkins-agent-secure:latest'
             args '''
-                -v /home/mirela/.kube:/kube
-                -v /home/mirela/.minikube:/root/.minikube
+                --network=host
+                -v /home/mirela/.kube:/kube/.kube
+                -v /home/mirela/.minikube:/kube/.minikube
                 -v /var/run/docker.sock:/var/run/docker.sock
-                -e KUBECONFIG=/kube/config
+                -e KUBECONFIG=/kube/.kube/config.docker
             '''
         }
     }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=.m2"
-        KUBECONFIG = '/kube/config'
+        KUBECONFIG = '/kube/.kube/config.docker'
     }
     stages {
         stage('Clean workspace') {
