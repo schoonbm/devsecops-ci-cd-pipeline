@@ -1,10 +1,8 @@
 pipeline {
-    agent {
-        docker {
-            image 'jenkins-agent-secure:latest'
-            args '-v /var/run/docker.sock:/var/run/docker.sock -v /home/mirela/.kube:/root/.kube -v /home/mirela/.minikube:/root/.minikube -e KUBECONFIG=/root/.kube/config'
-        }
+    agent { 
+        label 'secure-agent'
     }
+
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=.m2"
         KUBECONFIG = '/root/.kube/config'
