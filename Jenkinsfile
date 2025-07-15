@@ -66,7 +66,8 @@ pipeline {
             steps {
                 dir('k8s') {
                     sh '''
-                        kubectl apply -f deployment.yaml --record
+                        kubectl apply -f deployment.yaml
+                        kubectl rollout restart deployment secureapp
                         kubectl apply -f service.yaml   
                     '''
                 }
