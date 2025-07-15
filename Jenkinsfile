@@ -3,6 +3,7 @@ pipeline {
         docker {
             image 'jenkins-agent-secure:latest'
             args '''
+                --user root
                 --network=host
                 -v /home/mirela/.kube:/kube/.kube
                 -v /home/mirela/.minikube:/kube/.minikube
