@@ -28,9 +28,30 @@ pipeline {
                 }
             }
         }
-        stage('Trivy Scan') {
+        stage('Test') {
             steps {
-                sh 'trivy fs . --exit-code 0 --severity HIGH,CRITICAL'
+                dir('secureapp') {
+                    sh 'mvn test'
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('SAST Scan - SonarQube') {
+            environment {
+                SONAR_HOST_URL = 'http://localhost:9000'
+                SONAR_LOGIN = credentials('sonarqube-token')
+            }
+            steps {
+                dir('secureapp') {
+                    sh '''
+                        sonar-scanner \
+                        -Dsonar.projectKey=secureapp \
+                        -Dsonar.sources=src \
+                        -Dsonar.java.binaries=target \
+                        -Dsonar.host.url=$SONAR_HOST_URL \
+                        -Dsonar.login=$SONAR_LOGIN
+                    '''
+                }
             }
         }
         stage('Docker Build') {
@@ -54,14 +75,6 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
-            steps {
-                dir('secureapp') {
-                    sh 'mvn test'
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
         stage('Deploy to Minikube') {
             steps {
                 dir('k8s') {
@@ -73,24 +86,25 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube Scan') {
-        environment {
-            SONAR_HOST_URL = 'http://localhost:9000'
-            SONAR_LOGIN = credentials('sonarqube-token')
-        }
-        steps {
-            dir('secureapp') {
-                sh '''
-                    sonar-scanner \
-                    -Dsonar.projectKey=secureapp \
-                    -Dsonar.sources=src \
-                    -Dsonar.java.binaries=target \
-                    -Dsonar.host.url=$SONAR_HOST_URL \
-                    -Dsonar.login=$SONAR_LOGIN
-                '''
+        stage('DAST Scan - OWASP ZAP') {
+            steps {
+                script {
+                    def targetUrl = 'http://192.168.49.2:30081/'
+
+                    sh """
+                        docker run --rm \
+                            -v \$WORKSPACE:/zap/wrk:rw \
+                            owasp/zap2docker-stable zap-baseline.py \
+                            -t ${targetUrl} \
+                            -r zap-report.html \
+                            -J zap-report.json \
+                            -I
+                    """
+                }
+
+                // Archive the report for later viewing
+                archiveArtifacts artifacts: 'zap-report.*', fingerprint: true
             }
         }
-    }
-
     }
 }
