@@ -92,10 +92,10 @@ pipeline {
                     def targetUrl = 'http://192.168.49.2:30081/'
 
                     sh """
-                        docker pull owasp/zap2docker-stable
+                        docker pull zaproxy/zap-stable:latest
                         docker run --rm \
                         -v $WORKSPACE:/zap/wrk:rw \
-                        owasp/zap2docker-stable zap-baseline.py \
+                        zaproxy/zap-stable:latest zap-baseline.py \
                         -t http://192.168.49.2:30081/ \
                         -r zap-report.html \
                         -J zap-report.json \
