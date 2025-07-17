@@ -97,13 +97,17 @@ pipeline {
                         --network=host \
                         -v \$WORKSPACE:/zap/wrk \
                         -w /zap/wrk \
-                        zaproxy/zap-stable:latest zap-baseline.py \
-                        -t ${targetUrl} \
-                        -r zap-report.html \
-                        -J zap-report.json \
-                        -I || true
+                        zaproxy/zap-stable:latest /bin/bash -c '
+                            zap-baseline.py \
+                            -t ${targetUrl} \
+                            -r zap-report.html \
+                            -J zap-report.json \
+                            -I;
+                            echo "=== ZAP Container Output ===";
+                            ls -lah /zap/wrk
+                        '
                     """
-                    sh 'echo "== ZAP Output ==" && ls -lah $WORKSPACE'
+                    sh 'echo "=== Jenkins Workspace Output ===" && ls -lah $WORKSPACE'
                 }
             }
         }
