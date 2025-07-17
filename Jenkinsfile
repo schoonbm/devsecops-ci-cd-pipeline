@@ -92,8 +92,9 @@ pipeline {
                     def targetUrl = 'http://192.168.49.2:30081/'
 
                     sh """
-                        docker pull zaproxy/zap-stable:latest
                         docker run --rm \
+                        --user root \
+                        --network=host \
                         -v $WORKSPACE:/zap/wrk:rw \
                         zaproxy/zap-stable:latest zap-baseline.py \
                         -t http://192.168.49.2:30081/ \
@@ -102,10 +103,12 @@ pipeline {
                         -I
                     """
                 }
-
-                // Archive the report for later viewing
-                archiveArtifacts artifacts: 'zap-report.*', fingerprint: true
             }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'zap-report.*', fingerprint: true
         }
     }
 }
