@@ -90,20 +90,18 @@ pipeline {
             steps {
                 script {
                     def targetUrl = 'http://192.168.49.2:30081/'
-
                     sh """
                         docker run --rm \
                         --user root \
                         --network=host \
                         -v \$WORKSPACE:/zap/wrk \
-                        -w /zap \
+                        -w /zap/wrk \
                         zaproxy/zap-stable:latest /bin/bash -c '
                             zap-baseline.py \
                             -t ${targetUrl} \
                             -r zap-report.html \
                             -J zap-report.json \
-                            -I && \
-                            cp zap-report.* /zap/wrk/
+                            -I
                         '
                     """
                     sh 'echo "=== Final Jenkins Workspace Files ===" && ls -lah $WORKSPACE'
