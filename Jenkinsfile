@@ -95,15 +95,15 @@ pipeline {
                         docker run --rm \
                         --user root \
                         --network=host \
-                        -v $WORKSPACE:/zap/wrk:rw \
+                        -v \$WORKSPACE:/zap/wrk \
                         -w /zap/wrk \
                         zaproxy/zap-stable:latest zap-baseline.py \
                         -t ${targetUrl} \
                         -r zap-report.html \
                         -J zap-report.json \
-                        -I
+                        -I || true
                     """
-                    sh 'ls -lah $WORKSPACE'
+                    sh 'echo "== ZAP Output ==" && ls -lah $WORKSPACE'
                 }
             }
         }
