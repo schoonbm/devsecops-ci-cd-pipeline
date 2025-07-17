@@ -96,19 +96,20 @@ pipeline {
                         --user root \
                         --network=host \
                         -v $WORKSPACE:/zap/wrk:rw \
+                        -w /zap/wrk \
                         zaproxy/zap-stable:latest zap-baseline.py \
-                        -t http://192.168.49.2:30081/ \
+                        -t ${targetUrl} \
                         -r zap-report.html \
                         -J zap-report.json \
                         -I
                     """
+                    sh 'ls -lah $WORKSPACE'
                 }
             }
         }
     }
     post {
         always {
-            archiveArtifacts artifacts: 'zap-report.*', fingerprint: true
-        }
+            archiveArtifacts artifacts: 'zap-report.*', fingerprint: true        }
     }
 }
