@@ -96,10 +96,11 @@ pipeline {
                         --user root \
                         --network=host \
                         -v \$WORKSPACE:/zap/wrk \
+                        -w /zap/wrk \
                         zaproxy/zap-stable:latest zap-baseline.py \
                         -t ${targetUrl} \
-                        -r /zap/wrk/zap-report.html \
-                        -J /zap/wrk/zap-report.json \
+                        -r zap-report.html \
+                        -J zap-report.json \
                         -I || true
                     """
                     sh 'echo "== ZAP Output ==" && ls -lah $WORKSPACE'
