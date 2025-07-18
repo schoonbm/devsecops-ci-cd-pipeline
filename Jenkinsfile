@@ -89,7 +89,7 @@ pipeline {
         stage('DAST Scan - OWASP ZAP') {
             steps {
                 script {
-                    def targetUrl = 'http://192.168.49.2:30081/'
+                    def targetUrl = 'http://192.168.49.2:30081/hello'
 
 
                     sh """
