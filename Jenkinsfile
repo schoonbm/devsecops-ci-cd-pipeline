@@ -97,17 +97,17 @@ pipeline {
                         --user root \
                         --network=host \
                         -v \$WORKSPACE:/zap/wrk \
-                        -w /zap/wrk \
+                        -w /zap \
                         zaproxy/zap-stable:latest \
-                        zap-baseline.py \
+                        /bin/bash -c '
+                            zap-baseline.py \
                             -t ${targetUrl} \
                             -r zap-report.html \
                             -J zap-report.json \
-                            -I
+                            -I && \
+                            cp zap-report.* /zap/wrk/'
                     """
-
-                    sh 'echo "== Workspace Files ==" && ls -lah $WORKSPACE'
-
+                    sh 'echo "== Workspace after ZAP ==" && ls -lah $WORKSPACE | grep zap-report || true'
                 }
             }
         }
