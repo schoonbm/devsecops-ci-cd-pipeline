@@ -36,7 +36,7 @@ pipeline {
                 }
             }
         }
-        stage('SAST Scan - SonarQube') {
+        stage('SAST Scan (SonarQube)') {
             environment {
                 SONAR_HOST_URL = 'http://localhost:9000'
                 SONAR_LOGIN = credentials('sonarqube-token')
@@ -86,7 +86,7 @@ pipeline {
                 }
             }
         }
-        stage('DAST Scan - OWASP ZAP') {
+        stage('DAST Scan (OWASP ZAP)') {
             steps {
                 script {
                     def targetUrl = 'http://192.168.49.2:30081/hello'
@@ -107,6 +107,7 @@ pipeline {
                             -I && \
                             cp zap-report.* /zap/wrk/'
                     """
+
                     sh 'echo "== Workspace after ZAP ==" && ls -lah $WORKSPACE | grep zap-report || true'
                 }
             }
