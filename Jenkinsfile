@@ -92,9 +92,8 @@ pipeline {
                     def targetUrl = 'http://192.168.49.2:30081/hello'
 
                     sh """
-                        docker run --user root --network=host -dt --name owasp zaproxy/zap-stable:latest /bin/bash
-                        docker exec owasp zap-full-scan.py -t ${targetUrl} -r report.html
-                        docker cp owasp:/zap/report.html ${WORKSPACE}/report.html
+                        docker run --user root --network=host -dt --name owasp -v \$WORKSPACE:/zap/wrk zaproxy/zap-stable:latest /bin/bash
+                        docker exec owasp zap-full-scan.py -t ${targetUrl} -r /zap/wrk/report.html -I
                     """
                 }
             }
