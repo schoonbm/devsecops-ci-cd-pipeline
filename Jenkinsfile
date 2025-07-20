@@ -68,8 +68,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
-                        docker run --user root --network=host -dt --name owasp -v \$WORKSPACE:/zap/wrk zaproxy/zap-stable:latest /bin/bash
-                        docker exec owasp zap-baseline.py -t ${targetUrl} -r /zap/wrk/report.html -I
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag secureapp:latest schoonbm/secureapp:latest
+                        docker push schoonbm/secureapp:latest
                     '''
                 }
             }
@@ -92,7 +93,7 @@ pipeline {
 
                     sh """
                         docker run --user root --network=host -dt --name owasp -v \$WORKSPACE:/zap/wrk zaproxy/zap-stable:latest /bin/bash
-                        docker exec owasp zap-full-scan.py -t ${targetUrl} -r /zap/wrk/report.html -I
+                        docker exec owasp zap-baseline.py.py -t ${targetUrl} -r /zap/wrk/report.html -I
                     """
                 }
             }
