@@ -91,20 +91,25 @@ pipeline {
                 script {
                     def targetUrl = 'http://192.168.49.2:30081/hello'
                     sh """
-                        echo "Jenkins workspace is: ${WORKSPACE}"
                         docker run --rm \
                             --network host \
                             --user root \
                             -v "${WORKSPACE}":/zap/wrk:rw \
                             -w /zap/wrk \
                             -t zaproxy/zap-stable:latest \
-                            zap-baseline.py \
-                            -t http://192.168.49.2:30081/hello \
-                            -r zap-report.html \
-                            -I
-
-                        # debug:
-                        ls -lah "${WORKSPACE}"
+                            sh -c " \
+                                echo '=== Container CWD ==='; \
+                                pwd; \
+                                echo '=== Before scan ==='; \
+                                ls -lah .; \
+                                zap-baseline.py \
+                                -t http://192.168.49.2:30081/hello \
+                                -r zap-report.html \
+                                -J zap-report.json \
+                                -I; \
+                                echo '=== After scan ==='; \
+                                ls -lah .; \
+                            "
                     """
                 }
             }
