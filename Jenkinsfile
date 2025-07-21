@@ -91,9 +91,21 @@ pipeline {
                 script {
                     def targetUrl = 'http://192.168.49.2:30081/hello'
 
-                    sh """
-                        docker run --rm --user root --network=host -v "${WORKSPACE}":/zap/wrk:rw -t zaproxy/zap-stable:latest zap-baseline.py -t http://192.168.49.2:30081/hello -r zap-report.html -I
-                    """
+                    sh '''
+                        echo "Jenkins workspace is: ${WORKSPACE}"
+                        docker run --rm \
+                            --network host \
+                            --user root \
+                            -v "${WORKSPACE}":/zap/wrk:rw \
+                            -t zaproxy/zap-stable:latest \
+                            zap-baseline.py \
+                            -t http://192.168.49.2:30081/hello \
+                            -r zap-report.html \
+                            -I
+
+                        # debug:
+                        ls -lah "${WORKSPACE}"
+                    '''
                 }
             }
         }
