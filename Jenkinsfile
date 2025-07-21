@@ -93,7 +93,6 @@ pipeline {
 
                     sh """
                         docker run --rm --user root --network=host -v "${WORKSPACE}":/zap/wrk:rw -t zaproxy/zap-stable:latest zap-baseline.py -t http://192.168.49.2:30081/hello -r zap-report.html -I
-                        ls -lah zap-report.*
                     """
                 }
             }
