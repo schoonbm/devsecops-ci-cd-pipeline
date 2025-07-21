@@ -93,7 +93,7 @@ pipeline {
 
                     sh """
                         docker run --user root --network=host -dt --name owasp -v \$WORKSPACE:/zap/wrk zaproxy/zap-stable:latest /bin/bash
-                        docker exec owasp zap-baseline.py.py -t ${targetUrl} -r /zap/wrk/report.html -I
+                        docker exec owasp zap-baseline.py -t ${targetUrl} -r /zap/wrk/report.html -I
                     """
                 }
             }
