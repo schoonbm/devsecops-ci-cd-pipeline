@@ -92,8 +92,8 @@ pipeline {
                     def targetUrl = 'http://192.168.49.2:30081/hello'
 
                     sh """
-                        docker run --user root --network=host -dt --name owasp -v \$WORKSPACE:/zap/wrk zaproxy/zap-stable:latest /bin/bash
-                        docker exec owasp zap-baseline.py -t ${targetUrl} -r /zap/wrk/report.html -I
+                        docker run --rm --user root --network=host -v "${WORKSPACE}":/zap/wrk:rw -t zaproxy/zap-stable:latest zap-baseline.py -t http://192.168.49.2:30081/hello -r zap-report.html -I
+                        ls -lah zap-report.*
                     """
                 }
             }
@@ -101,13 +101,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'report.html', fingerprint: true
-
-            echo 'Cleaning up Docker container and workspace'
-            sh '''
-                docker stop owasp || true
-                docker rm owasp || true
-            '''
+            archiveArtifacts artifacts: 'zap-report.*', fingerprint: true
         }
     }
 }
