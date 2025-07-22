@@ -95,7 +95,7 @@ pipeline {
                         "-v ${env.WORKSPACE}:/zap/wrk:rw " +
                         "-w /zap/wrk"
                     ) {
-                        sh """
+                        sh '''
                             echo "Container CWD: $(pwd)"
                             ls -lah
 
@@ -107,7 +107,7 @@ pipeline {
 
                             echo "After scan:"
                             ls -lah
-                        """
+                        '''
                     }
                 }
             }
