@@ -91,20 +91,21 @@ pipeline {
                 docker {
                 image 'zaproxy/zap-stable:latest'
                 args  '--network host -u root'
-                reuseNode true   // ensure workspace is mounted
                 }
             }
             steps {
-                script {
-                    def targetUrl = 'http://192.168.49.2:30081/hello'
-                    sh """
-                        zap-baseline.py \
-                            -t http://192.168.49.2:30081/hello \
-                            -r zap-report.html \
-                            -J zap-report.json \
-                            -I
-                    """
-                }
+                sh '''
+                    echo "Container CWD (should be workspace): $(pwd)"
+                    ls -lah
+
+                    zap-baseline.py \
+                        -t http://192.168.49.2:30081/hello \
+                        -r zap-report.html \
+                        -J zap-report.json \
+                        -I
+
+                    ls -lah
+                    '''
             }
         }
     }
