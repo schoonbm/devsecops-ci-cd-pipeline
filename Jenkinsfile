@@ -87,29 +87,26 @@ pipeline {
             }
         }
         stage('DAST Scan (OWASP ZAP)') {
-            agent {
-                docker {
-                    image 'zaproxy/zap-stable:latest'
-                    args """
-                    --network host \
-                    -u root \
-                    -v ${env.WORKSPACE}:/zap/wrk:rw \
-                    -w /zap/wrk
-                    """
-                }
-            }
             steps {
-                sh '''
-                    echo "Container CWD: $(pwd)"
+                script {
+                    docker.image('zaproxy/zap-stable:latest').inside(
+                        "--network host -u root " +
+                        "-v ${env.WORKSPACE}:/zap/wrk:rw " +
+                        "-w /zap/wrk"
+                    ) {
+                        sh '''
+                            echo "Container CWD: $(pwd)"
 
-                    zap-baseline.py \
-                        -t http://192.168.49.2:30081/hello \
-                        -r zap-report.html \
-                        -J zap-report.json \
-                        -I
+                            zap-baseline.py \
+                                -t http://192.168.49.2:30081/hello \
+                                -r zap-report.html \
+                                -J zap-report.json \
+                                -I
 
-                    ls -lah
-                '''
+                            ls -lah
+                        '''
+                    }
+                }
             }
         }
     }
