@@ -95,17 +95,18 @@ pipeline {
             }
             steps {
                 sh '''
-                    echo "Container CWD (should be workspace): $(pwd)"
-                    ls -lah
+                    pwd            
+                    ls -la
 
                     zap-baseline.py \
+                        --autooff \
                         -t http://192.168.49.2:30081/hello \
                         -r zap-report.html \
                         -J zap-report.json \
                         -I
 
                     ls -lah
-                    '''
+                '''
             }
         }
     }
