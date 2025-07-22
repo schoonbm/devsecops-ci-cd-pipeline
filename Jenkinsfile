@@ -90,7 +90,7 @@ pipeline {
             steps {
                 script {
                     docker.image('zaproxy/zap-stable:latest').inside(
-                        "--network host" +
+                        "--network host " +
                         "-u root " +
                         "-v ${env.WORKSPACE}:/zap/wrk:rw " +
                         "-w /zap/wrk"
