@@ -90,12 +90,14 @@ pipeline {
             steps {
                 script {
                     docker.image('zaproxy/zap-stable:latest').inside(
-                        "--network host -u root " +
+                        "--network host" +
+                        "-u root " +
                         "-v ${env.WORKSPACE}:/zap/wrk:rw " +
                         "-w /zap/wrk"
                     ) {
-                        sh '''
+                        sh """
                             echo "Container CWD: $(pwd)"
+                            ls -lah
 
                             zap-baseline.py \
                                 -t http://192.168.49.2:30081/hello \
@@ -103,8 +105,9 @@ pipeline {
                                 -J zap-report.json \
                                 -I
 
+                            echo "After scan:"
                             ls -lah
-                        '''
+                        """
                     }
                 }
             }
