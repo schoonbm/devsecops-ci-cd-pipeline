@@ -87,29 +87,22 @@ pipeline {
             }
         }
         stage('DAST Scan (OWASP ZAP)') {
+              agent {
+                docker {
+                image 'zaproxy/zap-stable:latest'
+                args  '--network host -u root'
+                reuseNode true   // ensure workspace is mounted
+                }
+            }
             steps {
                 script {
                     def targetUrl = 'http://192.168.49.2:30081/hello'
                     sh """
-                        docker run --rm \
-                            --network host \
-                            --user root \
-                            -v "${WORKSPACE}":/zap/wrk:rw \
-                            -w /zap/wrk \
-                            -t zaproxy/zap-stable:latest \
-                            sh -c " \
-                                echo '=== Container CWD ==='; \
-                                pwd; \
-                                echo '=== Before scan ==='; \
-                                ls -lah .; \
-                                zap-baseline.py \
-                                -t http://192.168.49.2:30081/hello \
-                                -r zap-report.html \
-                                -J zap-report.json \
-                                -I; \
-                                echo '=== After scan ==='; \
-                                ls -lah .; \
-                            "
+                        zap-baseline.py \
+                            -t http://192.168.49.2:30081/hello \
+                            -r zap-report.html \
+                            -J zap-report.json \
+                            -I
                     """
                 }
             }
