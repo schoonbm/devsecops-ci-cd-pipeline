@@ -90,16 +90,19 @@ pipeline {
             agent {
                 docker {
                     image 'zaproxy/zap-stable:latest'
-                    args  '--network host -u root'
+                    args """
+                    --network host \
+                    -u root \
+                    -v ${env.WORKSPACE}:/zap/wrk:rw \
+                    -w /zap/wrk
+                    """
                 }
             }
             steps {
                 sh '''
-                    pwd            
-                    ls -la
+                    echo "Container CWD: $(pwd)"
 
                     zap-baseline.py \
-                        --autooff \
                         -t http://192.168.49.2:30081/hello \
                         -r zap-report.html \
                         -J zap-report.json \
