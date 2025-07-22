@@ -87,10 +87,10 @@ pipeline {
             }
         }
         stage('DAST Scan (OWASP ZAP)') {
-              agent {
+            agent {
                 docker {
-                image 'zaproxy/zap-stable:latest'
-                args  '--network host -u root'
+                    image 'zaproxy/zap-stable:latest'
+                    args  '--network host -u root'
                 }
             }
             steps {
