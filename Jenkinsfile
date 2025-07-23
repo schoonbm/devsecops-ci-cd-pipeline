@@ -89,12 +89,12 @@ pipeline {
         stage('DAST Scan (OWASP ZAP)') {
             steps {
                 script {
-                    docker.image('zaproxy/zap-stable:latest').inside(
-                        "--network host " +
-                        "-u root " +
-                        "-v ${env.WORKSPACE}:/zap/wrk:rw " +
-                        "-w /zap/wrk"
-                    ) {
+                    docker.image('zaproxy/zap-stable:latest').inside("""
+                        --network host
+                        -u root
+                        -v ${env.WORKSPACE}:/zap/wrk:rw
+                        -w /zap/wrk
+                    """) {
                         sh '''
                             echo "Container CWD: $(pwd)"
                             ls -lah
