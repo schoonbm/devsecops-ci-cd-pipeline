@@ -92,7 +92,7 @@ pipeline {
                     # Run ZAP as the same UID/GID as the Jenkins agent
                     echo "Running as: $(id -u):$(id -g)"
 
-                    docker run --rm \
+                    docker run \
                         --network host \
                         --user $(id -u):$(id -g) \
                         -v "${WORKSPACE}":/zap/wrk:rw \
