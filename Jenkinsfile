@@ -88,28 +88,25 @@ pipeline {
         }
         stage('DAST Scan (OWASP ZAP)') {
             steps {
-                script {
-                    docker.image('zaproxy/zap-stable:latest').inside("""
-                        --network host
-                        -u root
-                        -v ${env.WORKSPACE}:/zap/wrk:rw
-                        -w /zap/wrk
-                    """) {
-                        sh '''
-                            echo "Container CWD: $(pwd)"
-                            ls -lah
+                sh '''
+                    # Run ZAP as the same UID/GID as the Jenkins agent
+                    echo "Running as: $(id -u):$(id -g)"
 
-                            zap-baseline.py \
-                                -t http://192.168.49.2:30081/hello \
-                                -r zap-report.html \
-                                -J zap-report.json \
-                                -I
+                    docker run --rm \
+                        --network host \
+                        --user $(id -u):$(id -g) \
+                        -v "${WORKSPACE}":/zap/wrk:rw \
+                        -w /zap/wrk \
+                        zaproxy/zap-stable:latest \
+                        zap-baseline.py \
+                            -t http://192.168.49.2:30081/hello \
+                            -r zap-report.html \
+                            -J zap-report.json \
+                            -I
 
-                            echo "After scan:"
-                            ls -lah
-                        '''
-                    }
-                }
+                    echo "Workspace now contains:"
+                    ls -lah "${WORKSPACE}"
+                '''
             }
         }
     }
