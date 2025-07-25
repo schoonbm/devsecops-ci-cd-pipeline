@@ -89,10 +89,7 @@ pipeline {
         stage('DAST Scan (OWASP ZAP)') {
             steps {
                 sh '''
-                    # Run ZAP as the same UID/GID as the Jenkins agent
-                    echo "Running as: $(id -u):$(id -g)"
-
-                    docker run \
+                    docker run --rm \
                         --network host \
                         --user $(id -u):$(id -g) \
                         -v "${WORKSPACE}":/zap/wrk:rw \
