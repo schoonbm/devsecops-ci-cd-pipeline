@@ -110,6 +110,14 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'zap-report.*', fingerprint: true
+            publishHTML ([
+                reportName:    'OWASP ZAP Baseline Report',
+                reportDir:     '.',                
+                reportFiles:   'zap-report.html',  
+                keepAll:       true,
+                alwaysLinkToLastBuild: true,
+                allowMissing:  false
+            ])
         }
     }
 }
