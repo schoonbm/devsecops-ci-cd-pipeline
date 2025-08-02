@@ -118,6 +118,13 @@ pipeline {
                 alwaysLinkToLastBuild: true,
                 allowMissing:  false
             ])
+            emailtext body: '''
+                ${SCRIPT, template="groovy-html.template"}.
+                $PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+                Check console output at $BUILD_URL to view the results.''',
+                subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+                to: 'msschoonbeck@gmail.com',
+                replyTo: '$DEFAULT_REPLYTO'
         }
     }
 }
