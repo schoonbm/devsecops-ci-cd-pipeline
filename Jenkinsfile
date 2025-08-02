@@ -118,7 +118,7 @@ pipeline {
                 alwaysLinkToLastBuild: true,
                 allowMissing:  false
             ])
-            emailtext body: '''
+            emailext body: '''
                 ${SCRIPT, template="groovy-html.template"}.
                 $PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
                 Check console output at $BUILD_URL to view the results.''',
